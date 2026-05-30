@@ -4,18 +4,60 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model User {
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  products    Product[]
+}
+
+model Supplier {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String   @unique
+  cnpj      String   @unique
+  email     String?
+  phone     String?
   createdAt DateTime @default(now())
+  products  Product[]
 }
 
+model Product {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  unity   String
+  currentStock  Int @default(0)
+  minimumStock  Int @default(0)
+  categoryId Int 
+  category   Category @relation(fields: [categoryId], references: [id])
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+  createdAt DateTime @default(now())
+  StockMovement StockMovement[]
+}
+
+enum MovementType {
+  IN
+  OUT
+}
+
+model StockMovement{
+  id Int @id @default(autoincrement())
+  type MovementType // Enum (IN, OUT ) nda erro de sintaxe
+  quantity Int
+  notes String?
+  productId Int
+  product Product @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+
+}
