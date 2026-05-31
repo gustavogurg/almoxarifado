@@ -1,20 +1,20 @@
 import prisma from "../lib/prisma.js";
 
 async function findAll() {
-  return prisma.category.findMany();
+  return prisma.product.findMany();
 }
 
 async function findById(id) {
-  return prisma.category.findUnique({ where: { id } });
+  return prisma.product.findUnique({ where: { id } });
 }
 
 async function create(data) {
-  return prisma.category.create({ data });
+  return prisma.product.create({ data });
 }
 
 async function update(id, data) {
   try {
-    return await prisma.category.update({ where: { id }, data });
+    return await prisma.product.update({ where: { id }, data });
   } catch {
     return null;
   }
@@ -22,7 +22,7 @@ async function update(id, data) {
 
 async function remove(id) {
   try {
-    await prisma.category.delete({ where: { id } });
+    await prisma.product.delete({ where: { id } });
     return true;
   } catch {
     return false;

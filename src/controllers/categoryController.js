@@ -31,10 +31,6 @@ async function store(req, res) {
     return res.status(400).json({ error: 'O campo "name" é obrigatório.' });
   }
 
-  if (!description || typeof description !== "string" || description.trim() === "") {
-    return res.status(400).json({ error: 'O campo "description" é obrigatório.' });
-  }
-
 
   const category = await repo.create({
     name:        name.trim(),
