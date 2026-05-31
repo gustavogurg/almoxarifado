@@ -4,8 +4,8 @@ import express from "express";
 
 import categoryRoutes from "./src/routes/categoryRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
-// import StockMovementRoutes from "./src/routes/stockMovementRoutes.js";
-// import supplierRoutes from "./src/routes/supplierRoutes.js";
+import stockMovementRoutes from "./src/routes/stockMovementRoutes.js";
+import supplierRoutes from "./src/routes/supplierRoutes.js";
 
 // const prisma = new PrismaClient();
 const app = express();
@@ -14,8 +14,8 @@ const port = 4000;
 app.use(express.json());
 app.use("/categories", categoryRoutes);
 app.use("/products", productRoutes);
-// app.use("/stock-movements", StockMovementRoutes);
-// app.use("/suppliers", supplierRoutes);
+app.use("/stock-movements", stockMovementRoutes);
+app.use("/suppliers", supplierRoutes);
 
 
 
