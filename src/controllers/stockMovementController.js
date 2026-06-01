@@ -42,8 +42,17 @@ async function store(req, res) {
     });
     return res.status(201).json(movement);
   } catch (error) {
+    // Interceptando a nossa nova validação de estoque baseada em banco de dados
+    if (error.message === "Insufficient_Stock") {
+      return res.status(400).json({ error: 'Estoque insuficiente para realizar esta saída de materiais.' });
+    }
+
+    if (error.message === "Product_Not_Found" || error.code === "P2003") {
+      return res.status(404).json({ error: 'O produto informado não foi encontrado.' });
+    }
+
     console.error(error);
-    return res.status(500).json({ error: 'Erro interno. O produto informado pode não existir.' });
+    return res.status(500).json({ error: 'Erro interno ao processar a movimentação de estoque.' });
   }
 }
 
