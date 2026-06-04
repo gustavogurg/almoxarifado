@@ -56,20 +56,11 @@ async function create(data) {
   });
 }
 
-async function update(id, data) {
-  try {
-    return await prisma.stockMovement.update({ where: { id }, data });
-  } catch {
-    return null;
-  }
+async function findByProductId(productId) {
+  return prisma.stockMovement.findMany({
+    where: { productId },
+    orderBy: { createdAt: 'desc' }, // Ordenacao
+  });
 }
 
-async function remove(id) {
-  try {
-    return await prisma.stockMovement.delete({ where: { id } });
-  } catch {
-    return null;
-  }
-}
-
-export default { findAll, findById, create, update, remove };
+export default { findAll, findById, create, findByProductId };

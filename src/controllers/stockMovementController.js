@@ -56,46 +56,20 @@ async function store(req, res) {
   }
 }
 
-// PUT /stock-movements/:id
-async function update(req, res) {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ error: "O parâmetro id deve ser um número inteiro." });
-
-  const { type, quantity, notes, productId } = req.body;
-
-  if (type === undefined && quantity === undefined && notes === undefined && productId === undefined) {
-    return res.status(400).json({ error: "Informe ao menos um campo para atualizar." });
-  }
-
-  if (type !== undefined && type !== "IN" && type !== "OUT") {
-    return res.status(400).json({ error: 'O campo "type" deve ser "IN" ou "OUT".' });
+// GET /stock-movements/product/:productId
+async function findByProductId(req, res) {
+  const productId = parseInt(req.params.productId);
+  
+  if (isNaN(productId)) {
+     return res.status(400).json({ error: "O parâmetro productId deve ser um número inteiro." });
   }
 
   try {
-    const updated = await repo.update(id, {
-      ...(type !== undefined && { type }),
-      ...(quantity !== undefined && { quantity: parseInt(quantity) }),
-      ...(notes !== undefined && { notes: notes.trim() }),
-      ...(productId !== undefined && { productId: parseInt(productId) }),
-    });
-
-    if (!updated) return res.status(404).json({ error: `Movimentação com id ${id} não encontrada.` });
-    return res.status(200).json(updated);
+    const movements = await repo.findByProductId(productId);
+    return res.status(200).json(movements);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Erro interno ao atualizar movimentação.' });
+    return res.status(500).json({ error: "Erro interno ao buscar as movimentações do produto." });
   }
 }
-
-// DELETE /stock-movements/:id
-async function destroy(req, res) {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ error: "O parâmetro id deve ser um número inteiro." });
-
-  const removed = await repo.remove(id);
-  if (!removed) return res.status(404).json({ error: `Movimentação com id ${id} não encontrada.` });
-
-  return res.status(204).send();
-}
-
-export default { index, show, store, update, destroy };
+export default { index, show, store, findByProductId };
